@@ -48,9 +48,9 @@ const getEmo = (val) => {
     return '&#129319;'; // 😓
   } else if (val < 1350) {
     return '&#129322;'; // 😆
-  } else if (val < 1450) {
+  } else if (val < 1480) {
     return '&#129313;'; // 😃
-  } else if (val >= 1550) {
+  } else if (val >= 1480) {
     return '&#128169;'; // 💩
   }
 }
