@@ -6,14 +6,17 @@ const score = ref(0)
 const deprScore = ref(100)
 const isScoreVisible = ref(false)
 const isFake = ref(false);
+const mapIs = data.map(() => false);
 
-const toggleHandler = (event, value) => {
+const toggleHandler = (event, value, index) => {
   if (event.target.checked) {
     score.value += value
     deprScore.value--;
+    mapIs[index] = true;
   } else {
     score.value -= value
     deprScore.value++;
+    mapIs[index] = false;
   }
 }
 
@@ -21,7 +24,37 @@ const toggleHandler = (event, value) => {
 const calculateScore = () => {
   isScoreVisible.value = true;
   isFake.value = deprScore.value > 95;
+  // const progressBar = document.querySelector('.progressBar');
+  // console.log(progressBar);
+  // progressBar.value = score.value;
 }
+
+const getEmo = (val) => {
+  if (val < 100) {
+    return '&#128519;'; // 😏
+  } else if (val < 300) {
+    return '&#128513;'; // 😃
+  } else if (val < 450) {
+    return '&#128522;'; // 😊
+  } else if (val < 550) {
+    return '&#129321;'; // 😱
+  } else if (val < 630) {
+    return '&#129312;'; // 😲
+  } else if (val < 750) {
+    return '&#128520;'; // 😄
+  } else if (val < 980) {
+    return '&#129397;'; // 😏
+  } else if (val < 1200) {
+    return '&#129319;'; // 😓
+  } else if (val < 1350) {
+    return '&#129322;'; // 😆
+  } else if (val < 1450) {
+    return '&#129313;'; // 😃
+  } else if (val >= 1550) {
+    return '&#128169;'; // 💩
+  }
+}
+
 </script>
 
 <template>
@@ -32,7 +65,7 @@ const calculateScore = () => {
       <div class="questions">
         <div v-for="(item, index) in data" :key="index" class="question-item">
           <label>
-            <input type="checkbox" @change="(event) => toggleHandler(event, item.value)" />
+            <input type="checkbox" @change="(event) => toggleHandler(event, item.value, index)" />
             <span>{{ index + 1 }}. {{ item.ans }}</span>
           </label>
         </div>
@@ -42,7 +75,15 @@ const calculateScore = () => {
 
     <div v-else class="result">
       <h2 class="resultName">Your score: </h2>
-      <h1 v-if="!isFake" class="resultVal">{{ score }}<span class="dv"> / </span>{{ deprScore }} </h1>
+      <div v-if="!isFake">
+        <h1 class="resultVal">{{ score }}<span class="dv"> / </span>{{ deprScore }} </h1>
+        <div class="wrapProgress" >
+          <span style="font-size: 1.2em;">&#128037;</span>
+          <progress class="progressBar" :value="score" max="1741" ></progress>
+          <span style="font-size: 1.2em;">&#128128;</span>
+        </div>
+        <span v-html="getEmo(score)" style="font-size: 2.5em;"></span>
+      </div>
       <h1 v-else class="resultVal"> <span> try later </span> </h1>
     </div>
   </div>
@@ -80,6 +121,7 @@ label{
   display: flex;
   width: 100%;
   cursor: pointer;
+  /*cursor: url('../assets/icons8-64.png') 2 2, auto;*/
   padding: 10px;
 }
 
@@ -102,7 +144,6 @@ span {
   font-size: 1.2rem;
   border: none;
   border-radius: 15px;
-  cursor: pointer;
   margin: 15px auto;
 }
 
@@ -116,6 +157,19 @@ span {
   justify-content: center;
   align-items: center;
   font-weight: bold;
+}
+
+.wrapProgress {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+.progressBar {
+  width: 250px;
+  height: 25px;
 }
 
 .dv {
@@ -157,6 +211,7 @@ span {
     width: auto;
     min-width: 100px;
     padding: 5px 8px;
+    cursor: auto;
   }
 
   span {
