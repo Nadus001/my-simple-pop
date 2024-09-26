@@ -30,7 +30,9 @@ const calculateScore = () => {
 }
 
 const getEmo = (val) => {
-  if (val < 100) {
+   if (mapIs[99]){
+    return 'Suka jirafa zachem &#128519;';
+  } else if (val < 100) {
     return '&#128519;'; // 😏
   } else if (val < 300) {
     return '&#128513;'; // 😃
